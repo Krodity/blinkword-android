@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- A single flashing "word": three bars with the center one highlighted, standing in for the ORP anchor letter. -->
+    <path
+        android:fillColor="#8A8A8A"
+        android:pathData="M24,50 L44,50 L44,58 L24,58 Z" />
+    <path
+        android:fillColor="#D32F2F"
+        android:pathData="M48,50 L60,50 L60,58 L48,58 Z" />
+    <path
+        android:fillColor="#8A8A8A"
+        android:pathData="M64,50 L84,50 L84,58 L64,58 Z" />
+</vector>
