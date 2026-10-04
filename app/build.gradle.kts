@@ -15,8 +15,8 @@ android {
         applicationId = "uk.krodity.blinkword"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
         base.archivesName = "blinkword-$versionName"
 
         // sherpa-onnx ships native libraries for four ABIs. Both target devices
