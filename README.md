@@ -19,6 +19,17 @@ neural voice.
 - No accounts and no tracking. The only network traffic is Gutenberg searches
   and downloads, plus the neural voice models when you choose to download them.
 
+<p align="center">
+  <img src="docs/images/library.png" width="240" alt="Library with covers">
+  <img src="docs/images/reader.png" width="240" alt="RSVP reader with the anchor letter highlighted">
+  <img src="docs/images/discover.png" width="240" alt="Discover: Project Gutenberg search">
+</p>
+<p align="center">
+  <img src="docs/images/fulltext.png" width="240" alt="Full-text view">
+  <img src="docs/images/stats.png" width="240" alt="Statistics">
+  <img src="docs/images/settings.png" width="240" alt="Settings sheet">
+</p>
+
 ---
 
 ## Contents
@@ -233,6 +244,7 @@ the paragraphs on screen are ever composed.
 
 | Problem | Fix |
 |---|---|
+| *BlinkWord isn't allowed to use the network on this device* | The phone's per-app network setting is blocking BlinkWord (common on LineageOS-based ROMs, and with Data Saver or firewall apps). Tap **Open app settings** and turn on network access |
 | *Couldn't reach Project Gutenberg* | Check your connection. Gutenberg sometimes rate-limits, so wait a minute and try again |
 | A PDF imports with no text | It's a scanned PDF (images only). Run OCR on it first, or find an ePub copy |
 | *No speech voices installed on this device* | Install a TTS engine (e.g. Google Speech Services), or download a neural voice |

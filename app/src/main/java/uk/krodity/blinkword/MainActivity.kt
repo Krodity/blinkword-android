@@ -81,6 +81,7 @@ private fun AppRoot(vm: BlinkWordViewModel) {
                 onQueryChange = vm::setDiscoverQuery,
                 onSearch = vm::searchDiscover,
                 onDownload = vm::downloadBook,
+                onOpenAppSettings = { vm.openAppSettings() },
                 bottomBar = navBar,
             )
 

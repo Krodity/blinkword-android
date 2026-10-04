@@ -24,7 +24,9 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -37,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import uk.krodity.blinkword.data.NetworkProblem
+import uk.krodity.blinkword.data.message
 import uk.krodity.blinkword.data.discover.GutenbergBook
 import uk.krodity.blinkword.logic.formatCompactNumber
 import uk.krodity.blinkword.ui.DiscoverState
@@ -47,6 +51,7 @@ fun DiscoverScreen(
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onDownload: (GutenbergBook) -> Unit,
+    onOpenAppSettings: () -> Unit,
     bottomBar: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -87,12 +92,26 @@ fun DiscoverScreen(
                 }
 
                 state.error != null && state.results.isEmpty() -> {
-                    Text(
-                        text = "Couldn't reach Project Gutenberg.\n${state.error}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    val problem = state.networkProblem
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.align(Alignment.Center).padding(32.dp),
-                    )
+                    ) {
+                        Text(
+                            text = problem?.message() ?: "Couldn't reach Project Gutenberg.\n${state.error}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(top = 16.dp),
+                        ) {
+                            if (problem == NetworkProblem.BLOCKED_FOR_APP) {
+                                Button(onClick = onOpenAppSettings) { Text("Open app settings") }
+                            }
+                            OutlinedButton(onClick = onSearch) { Text("Try again") }
+                        }
+                    }
                 }
 
                 state.results.isEmpty() -> {

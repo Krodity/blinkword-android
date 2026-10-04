@@ -20,6 +20,9 @@ import uk.krodity.blinkword.data.Collection
 import uk.krodity.blinkword.data.DocumentCollectionCrossRef
 import uk.krodity.blinkword.data.DocumentRepository
 import uk.krodity.blinkword.data.DocumentSummary
+import uk.krodity.blinkword.data.NetworkProblem
+import uk.krodity.blinkword.data.message
+import uk.krodity.blinkword.data.networkProblem
 import uk.krodity.blinkword.data.discover.GutenbergApi
 import uk.krodity.blinkword.data.discover.GutenbergBook
 import uk.krodity.blinkword.data.LibrarySortOrder
@@ -58,6 +61,8 @@ data class DiscoverState(
     val results: List<GutenbergBook> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
+    /** Set when Android itself is keeping this app off the network. */
+    val networkProblem: NetworkProblem? = null,
     val downloadingIds: Set<Int> = emptySet(),
     val downloadedIds: Set<Int> = emptySet(),
 )
@@ -185,7 +190,7 @@ class BlinkWordViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun searchDiscover() {
         val query = _ui.value.discover.query
-        _ui.update { it.copy(discover = it.discover.copy(isLoading = true, error = null)) }
+        _ui.update { it.copy(discover = it.discover.copy(isLoading = true, error = null, networkProblem = null)) }
 
         viewModelScope.launch {
             try {
@@ -197,6 +202,7 @@ class BlinkWordViewModel(application: Application) : AndroidViewModel(applicatio
                         discover = it.discover.copy(
                             isLoading = false,
                             error = e.message ?: "Couldn't reach Project Gutenberg",
+                            networkProblem = networkProblem(getApplication()),
                         ),
                     )
                 }
@@ -217,11 +223,14 @@ class BlinkWordViewModel(application: Application) : AndroidViewModel(applicatio
             )
             _ui.update { it.copy(discover = it.discover.copy(downloadedIds = it.discover.downloadedIds + book.id)) }
         } catch (e: Exception) {
-            Toast.makeText(getApplication(), "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
+            val reason = networkProblem(getApplication())?.message() ?: e.message
+            Toast.makeText(getApplication(), "Download failed: $reason", Toast.LENGTH_LONG).show()
         } finally {
             _ui.update { it.copy(discover = it.discover.copy(downloadingIds = it.discover.downloadingIds - book.id)) }
         }
     }
+
+    fun openAppSettings() = uk.krodity.blinkword.data.openAppSettings(getApplication())
 
     fun selectCollection(id: Long?) = _ui.update { it.copy(selectedCollectionId = id) }
 
@@ -477,7 +486,7 @@ class BlinkWordViewModel(application: Application) : AndroidViewModel(applicatio
             toast("${model.displayName} ready")
         } catch (e: Exception) {
             _ui.update { it.copy(neural = it.neural.copy(downloadingId = null, progress = 0f)) }
-            toast("Download failed: ${e.message}")
+            toast("Download failed: ${networkProblem(getApplication())?.message() ?: e.message}")
         }
     }
 

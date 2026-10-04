@@ -2,6 +2,8 @@
 
     <!-- Discover downloads books from Project Gutenberg; nothing else goes online. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Lets the app tell "offline" from "this app's network access is blocked". -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="false"
